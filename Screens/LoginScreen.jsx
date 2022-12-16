@@ -9,22 +9,21 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import addPhotoImg from "../../images/Union.png";
-import deletePhotoImg from "../../images/greyCross.png";
-import userPhoto from "../../images/userPhoto.png";
+import addPhotoImg from "../images/Union.png";
+import deletePhotoImg from "../images/greyCross.png";
+import userPhoto from "../images/userPhoto.png";
 
 SplashScreen.preventAutoHideAsync();
 
 const fonts = ["Roboto", "RobotoRegular"];
-const initialState = { login: "", email: "", password: "" };
+const initialState = { email: "", password: "" };
 
-export const Registration = ({ focus, setFocus }) => {
-  const [isPhoto, setIsPhoto] = useState(false);
+export const LoginScreen = ({ focus, setFocus }) => {
   const [credentiasl, setCredentials] = useState(initialState);
   const [showPass, setShowPass] = useState(true);
   const [fontsLoaded] = useFonts({
-    [fonts[0]]: require("../../assets/fonts/Roboto-Medium.ttf"),
-    [fonts[1]]: require("../../assets/fonts/Roboto-Regular.ttf"),
+    [fonts[0]]: require("../assets/fonts/Roboto-Medium.ttf"),
+    [fonts[1]]: require("../assets/fonts/Roboto-Regular.ttf"),
   });
 
   const onLayoutRootView = useCallback(async () => {
@@ -42,41 +41,8 @@ export const Registration = ({ focus, setFocus }) => {
     return null;
   }
   return (
-    <View style={styles.registerContainer} onLayout={onLayoutRootView}>
-      <View style={styles.photoContainer}>
-        {isPhoto && <Image source={userPhoto} />}
-        {isPhoto ? (
-          <TouchableOpacity
-            style={{ ...styles.addPhotoBtn, borderColor: "#BDBDBD" }}
-            activeOpacity={0.7}
-            onPress={() => setIsPhoto(false)}
-          >
-            <Image source={deletePhotoImg} style={styles.addPhotoImg} />
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={styles.addPhotoBtn}
-            activeOpacity={0.7}
-            onPress={() => setIsPhoto(true)}
-          >
-            <Image source={addPhotoImg} style={styles.addPhotoImg} />
-          </TouchableOpacity>
-        )}
-      </View>
-      <Text style={{ ...styles.header, fontFamily: fonts[0] }}>
-        Регистрация
-      </Text>
-      <View>
-        <TextInput
-          style={{ ...styles.input, fontFamily: fonts[1] }}
-          placeholder="Логин"
-          onFocus={() => setFocus(true)}
-          onChangeText={(value) => {
-            setCredentials((prev) => ({ ...prev, login: value }));
-          }}
-          value={credentiasl.login}
-        />
-      </View>
+    <View style={styles.loginContainer} onLayout={onLayoutRootView}>
+      <Text style={{ ...styles.header, fontFamily: fonts[0] }}>Войти</Text>
       <View>
         <TextInput
           style={{ ...styles.input, fontFamily: fonts[1] }}
@@ -122,11 +88,11 @@ export const Registration = ({ focus, setFocus }) => {
             onPress={onRegister}
           >
             <Text style={{ ...styles.btnText, fontFamily: fonts[1] }}>
-              Зарегистрироваться
+              Войти
             </Text>
           </TouchableOpacity>
           <Text style={{ ...styles.loginText, fontFamily: fonts[1] }}>
-            Уже есть аккаунт? Войти
+            Нет аккаунта? Зарегистрироваться
           </Text>
         </>
       )}
@@ -135,42 +101,13 @@ export const Registration = ({ focus, setFocus }) => {
 };
 
 const styles = StyleSheet.create({
-  registerContainer: {
+  loginContainer: {
     backgroundColor: "#FFFFFF",
     borderTopStartRadius: 25,
     borderTopEndRadius: 25,
     paddingHorizontal: 16,
-    paddingTop: 93,
+    paddingTop: 32,
     position: "relative",
-  },
-  photoContainer: {
-    position: "absolute",
-    width: 120,
-    height: 120,
-    backgroundColor: "#F6F6F6",
-    borderRadius: 16,
-    left: "50%",
-    transform: [{ translateY: -50 }, { translateX: -50 }],
-  },
-  addPhotoBtn: {
-    position: "absolute",
-    right: 0,
-    bottom: 14,
-    width: 25,
-    height: 25,
-    transform: [{ translateX: 12.5 }],
-
-    alignItems: "center",
-    justifyContent: "center",
-
-    borderColor: "#FF6C00",
-    borderWidth: 1,
-    borderRadius: "50%",
-  },
-  addPhotoImg: {
-    resizeMode: "cover",
-    width: 15,
-    height: 15,
   },
   header: {
     color: "#212121",
@@ -227,7 +164,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     textAlign: "center",
-    marginBottom: 78,
+    marginBottom: 144,
     color: "#1B4371",
   },
 });
