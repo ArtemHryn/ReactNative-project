@@ -1,11 +1,11 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { CreatePostScreen } from "./CreatePostScreen";
-import { PostsScreen } from "./PostsScreen";
 import { ProfileScreen } from "./Profile";
 
 //icons
 import { Feather, Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
+import PostsScreen from "./PostsScreen";
 
 const BottomMenu = createBottomTabNavigator();
 
@@ -23,7 +23,7 @@ export const Home = ({ navigation }) => {
         name="Posts"
         component={PostsScreen}
         options={{
-          title: "Публикации",
+          headerShown: false,
           tabBarIcon: ({ focused, size }) => (
             <Feather
               name="grid"

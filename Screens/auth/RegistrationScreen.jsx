@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import {  useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,14 +11,11 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from "react-native";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 import addPhotoImg from "../../images/Union.png";
 import deletePhotoImg from "../../images/greyCross.png";
 import userPhoto from "../../images/userPhoto.png";
 import photoBG from "../../images/Photo_BG.jpg";
 
-SplashScreen.preventAutoHideAsync();
 
 const fonts = ["Roboto", "RobotoRegular"];
 const initialState = { login: "", email: "", password: "" };
@@ -28,16 +25,7 @@ export const Registration = ({ navigation }) => {
   const [isPhoto, setIsPhoto] = useState(false);
   const [credentiasl, setCredentials] = useState(initialState);
   const [showPass, setShowPass] = useState(true);
-  const [fontsLoaded] = useFonts({
-    [fonts[0]]: require("../../assets/fonts/Roboto-Medium.ttf"),
-    [fonts[1]]: require("../../assets/fonts/Roboto-Regular.ttf"),
-  });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
 
   const onRegister = () => {
     console.log(credentiasl);
@@ -51,9 +39,7 @@ export const Registration = ({ navigation }) => {
     setFocus(false);
   };
 
-  if (!fontsLoaded) {
-    return null;
-  }
+
   return (
     <TouchableWithoutFeedback onPress={onTouchOutOfForm}>
       <View style={styles.container}>
@@ -61,7 +47,7 @@ export const Registration = ({ navigation }) => {
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
-            <View style={styles.registerContainer} onLayout={onLayoutRootView}>
+            <View style={styles.registerContainer} >
               <View style={styles.photoContainer}>
                 {isPhoto && <Image source={userPhoto} />}
                 {isPhoto ? (

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import {  useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,11 +10,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from "react-native";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 import photoBG from "../../images/Photo_BG.jpg";
-
-SplashScreen.preventAutoHideAsync();
 
 const fonts = ["Roboto", "RobotoRegular"];
 const initialState = { email: "", password: "" };
@@ -23,16 +19,7 @@ export const LoginScreen = ({ navigation }) => {
   const [focus, setFocus] = useState();
   const [credentiasl, setCredentials] = useState(initialState);
   const [showPass, setShowPass] = useState(true);
-  const [fontsLoaded] = useFonts({
-    [fonts[0]]: require("../../assets/fonts/Roboto-Medium.ttf"),
-    [fonts[1]]: require("../../assets/fonts/Roboto-Regular.ttf"),
-  });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
 
   const onLogin = () => {
     console.log(credentiasl);
@@ -43,9 +30,7 @@ export const LoginScreen = ({ navigation }) => {
     Keyboard.dismiss();
     setFocus(false);
   };
-  if (!fontsLoaded) {
-    return null;
-  }
+
   return (
     <TouchableWithoutFeedback onPress={onTouchOutOfForm}>
       <View style={styles.container}>
@@ -53,8 +38,8 @@ export const LoginScreen = ({ navigation }) => {
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
-            <View style={styles.loginContainer} onLayout={onLayoutRootView}>
-              <Text style={{ ...styles.header, fontFamily: fonts[0] }}>
+            <View style={styles.loginContainer}>
+              <Text style={{ ...styles.header }}>
                 Войти
               </Text>
               <View>
@@ -143,6 +128,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   header: {
+    fontFamily: "Roboto",
     color: "#212121",
     textAlign: "center",
     fontWeight: 500,

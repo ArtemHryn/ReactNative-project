@@ -1,71 +1,51 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import userPhoto from "../../images/userPhoto.png";
-import { useCallback } from "react";
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { Posts } from "../nestedScreens/MainPostScreen";
+import MapPostsScreen from "../nestedScreens/MapPostsScreen";
+import CommentsPostsScreen from "../nestedScreens/CommentsPostsScreen";
+import { TouchableOpacity } from "react-native";
 
-SplashScreen.preventAutoHideAsync();
+//icons
+import { Ionicons } from "@expo/vector-icons";
 
-const fonts = ["Roboto", "RobotoRegular", 'RobotoBold'];
+const PostNav = createStackNavigator();
 
-export const PostsScreen = () => {
-  const [fontsLoaded] = useFonts({
-    [fonts[0]]: require("../../assets/fonts/Roboto-Medium.ttf"),
-    [fonts[1]]: require("../../assets/fonts/Roboto-Regular.ttf"),
-    [fonts[2]]: require("../../assets/fonts/Roboto-Bold.ttf"),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-    if (!fontsLoaded) {
-      return null;
-    }
+const PostsScreen = ({navigation}) => {
   return (
-    <View style={styles.container} onLayout={onLayoutRootView}>
-      <View style={styles.userContainer}>
-        <Image source={userPhoto} style={styles.image} />
-        <View>
-          <Text style={{ ...styles.name, fontFamily: fonts[2] }}>
-            Natali Romanova
-          </Text>
-          <Text style={{ ...styles.email, fontFamily: fonts[1] }}>
-            email@example.com
-          </Text>
-        </View>
-      </View>
-    </View>
+    <PostNav.Navigator>
+      <PostNav.Screen
+        name="MainPost"
+        component={Posts}
+        options={{
+          title: "Публікації",
+          headerLeft: false,
+          headerRight: () => (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={{ marginRight: 10 }}
+              onPress={() => navigation.navigate("Login")}
+            >
+              <Ionicons name="exit-outline" size={28} color="#BDBDBD" />
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <PostNav.Screen
+        name="Map"
+        component={MapPostsScreen}
+        options={{
+          title: "Карта",
+        }}
+      />
+      <PostNav.Screen
+        name="Comments"
+        component={CommentsPostsScreen}
+        options={{
+          title: "Коментарі",
+        }}
+      />
+    </PostNav.Navigator>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingVertical: 32,
-    paddingHorizontal: 16,
-  },
-  userContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  image: {
-    width: 60,
-    height: 60,
-    marginRight: 8,
-  },
-  name: {
-    fontWeight: 700,
-    fontSize: 13,
-    lineHeight: 15,
-    color: '#212121',
-  },
-  email: {
-    fontWeight: 400,
-    fontSize: 11,
-    lineHeight: 13,
-    color: 'rgba(33, 33, 33, 0.8)',
-  },
-});
+export default PostsScreen;
