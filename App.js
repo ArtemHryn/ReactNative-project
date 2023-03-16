@@ -6,12 +6,14 @@ import { Home } from "./Screens/MainScreens/Home";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { useCallback, useEffect, useState } from "react";
+import { View } from "react-native";
 
 const loadFonts = async () => {
   await Font.loadAsync({
-    "Roboto": require("./assets/fonts/Roboto-Medium.ttf"),
-    "RobotoRegular": require("./assets/fonts/Roboto-Regular.ttf"),
-    "RobotoBold": require("./assets/fonts/Roboto-Bold.ttf"),
+    Roboto: require("./assets/fonts/Roboto-Medium.ttf"),
+    RobotoRegular: require("./assets/fonts/Roboto-Regular.ttf"),
+    RobotoBold: require("./assets/fonts/Roboto-Bold.ttf"),
+    "Inter-Medium": require("./assets/fonts/Inter-Medium.ttf"),
   });
 };
 
@@ -44,24 +46,26 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer onLayout={onLayoutRootView}>
-      <Auth.Navigator>
-        <Auth.Screen
-          options={{ headerShown: false }}
-          name="Login"
-          component={LoginScreen}
-        />
-        <Auth.Screen
-          options={{ headerShown: false }}
-          name="Registration"
-          component={Registration}
-        />
-        <Auth.Screen
-          options={{ headerShown: false }}
-          name="Home"
-          component={Home}
-        />
-      </Auth.Navigator>
-    </NavigationContainer>
+    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <NavigationContainer>
+        <Auth.Navigator initialRouteName="Login">
+          <Auth.Screen
+            options={{ headerShown: false }}
+            name="Login"
+            component={LoginScreen}
+          />
+          <Auth.Screen
+            options={{ headerShown: false }}
+            name="Registration"
+            component={Registration}
+          />
+          <Auth.Screen
+            options={{ headerShown: false }}
+            name="Home"
+            component={Home}
+          />
+        </Auth.Navigator>
+      </NavigationContainer>
+    </View>
   );
 }

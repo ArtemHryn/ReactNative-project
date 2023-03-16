@@ -33,9 +33,6 @@ export const CreatePostScreen = ({ navigation }) => {
     () => Dimensions.get("window").width - 16 * 2
   );
 
-
- 
-
   const takePhoto = async () => {
     if (photo) {
       setState((prev) => ({ ...prev, photo: null }));
@@ -88,9 +85,6 @@ export const CreatePostScreen = ({ navigation }) => {
     })();
   }, [state]);
 
-  if (!fontsLoaded) {
-    return null;
-  }
 
   const onTouchOutOfInput = () => {
     Keyboard.dismiss();

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import {  useState } from "react";
 import {
   Image,
   ImageBackground,
@@ -8,9 +8,6 @@ import {
   View,
 } from "react-native";
 
-//fonts
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
 
 //icons
 import { Ionicons } from "@expo/vector-icons";
@@ -21,26 +18,11 @@ import addPhotoImg from "../../images/Union.png";
 import deletePhotoImg from "../../images/greyCross.png";
 import userPhoto from "../../images/userPhoto.png";
 
-SplashScreen.preventAutoHideAsync();
-
 const fonts = ["Roboto", "RobotoRegular"];
 
 export const ProfileScreen = ({navigation}) => {
   const [isPhoto, setIsPhoto] = useState(false);
-  const [fontsLoaded] = useFonts({
-    [fonts[0]]: require("../../assets/fonts/Roboto-Medium.ttf"),
-    // [fonts[1]]: require("../../assets/fonts/Roboto-Regular.ttf"),
-  });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
   return (
     <View style={styles.container}>
       <ImageBackground source={photoBG} style={styles.image}>
