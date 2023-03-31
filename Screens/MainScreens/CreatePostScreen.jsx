@@ -1,5 +1,9 @@
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Camera } from "expo-camera";
+import { collection, addDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage, db } from "../../src/firebase/config";
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
@@ -17,6 +21,7 @@ import {
 
 //icons
 import { FontAwesome5, EvilIcons, MaterialIcons } from "@expo/vector-icons";
+import { getUser } from "../../src/redux/auth/selectors";
 
 const fonts = ["RobotoRegular"];
 
@@ -29,6 +34,7 @@ export const CreatePostScreen = ({ navigation }) => {
   const [state, setState] = useState({});
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [isActiveBtn, setIsActiveBtn] = useState(false);
+  const { userId, nickname } = useSelector(getUser);
   const [dimensions, setDimensions] = useState(
     () => Dimensions.get("window").width - 16 * 2
   );
@@ -66,11 +72,37 @@ export const CreatePostScreen = ({ navigation }) => {
         : Camera.Constants.Type.back
     );
   };
-  const onPublicPost = () => {
-    navigation.navigate("MainPost", state);
-    setState(initialState);
+  const onPublicPost = async () => {
+    try {
+      const photoURL = await uploadPhotoToServer();
+      await addDoc(collection(db, "posts"), {
+        image: photoURL,
+        ...state,
+        userId,
+        nickname,
+        comments: [],
+      });
+      navigation.navigate("MainPost", state);
+      setState(initialState);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  const uploadPhotoToServer = async () => {
+    try {
+      const response = await fetch(photo);
+      const file = await response.blob();
+      const uniqueId = Date.now().toString();
+
+      const storageRef = await ref(storage, `postImage/${uniqueId}`);
+      await uploadBytes(storageRef, file);
+
+      return await getDownloadURL(storageRef);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     const { photo, name } = state;
     setIsActiveBtn(photo && name);
@@ -84,7 +116,6 @@ export const CreatePostScreen = ({ navigation }) => {
       setHasPermission(status === "granted");
     })();
   }, [state]);
-
 
   const onTouchOutOfInput = () => {
     Keyboard.dismiss();
@@ -138,7 +169,7 @@ export const CreatePostScreen = ({ navigation }) => {
             placeholder="Название..."
             style={{ ...styles.input, fontFamily: fonts[0] }}
             onFocus={() => setFocus(true)}
-            onChangeText={(name) => setState(prev => ({...prev, name}))}
+            onChangeText={(name) => setState((prev) => ({ ...prev, name }))}
             value={name}
           />
         </View>
@@ -153,7 +184,7 @@ export const CreatePostScreen = ({ navigation }) => {
             placeholder="Местность..."
             style={{ ...styles.input, fontFamily: fonts[0] }}
             onFocus={() => setFocus(true)}
-            onChangeText={(place) => setState(prev => ({...prev, place}))}
+            onChangeText={(place) => setState((prev) => ({ ...prev, place }))}
             value={place}
           />
         </View>

@@ -1,126 +1,96 @@
-import {  useState } from "react";
-import {
-  Image,
-  ImageBackground,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { TouchableOpacity } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import UserScreen from "./UserScreen";
+import MapScreen from "../posts/MapScreen";
+import CommentsPostsScreen from '../nestedScreens/CommentsPostsScreen'
+import MapPostsScreen from "../nestedScreens/MapPostsScreen";
 
+const UserStack = createStackNavigator();
 
-//icons
-import { Ionicons } from "@expo/vector-icons";
-
-//images
-import photoBG from "../../images/Photo_BG.jpg";
-import addPhotoImg from "../../images/Union.png";
-import deletePhotoImg from "../../images/greyCross.png";
-import userPhoto from "../../images/userPhoto.png";
-
-const fonts = ["Roboto", "RobotoRegular"];
-
-export const ProfileScreen = ({navigation}) => {
-  const [isPhoto, setIsPhoto] = useState(false);
+function DefaultUserScreen({ navigation }) {
 
   return (
-    <View style={styles.container}>
-      <ImageBackground source={photoBG} style={styles.image}>
-        <View style={styles.profileContainer} onLayout={onLayoutRootView}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.backBtn}
-            onPress={() => navigation.navigate("Login")}
-          >
-            <Ionicons name="exit-outline" size={28} color="#BDBDBD" />
-          </TouchableOpacity>
-          <View style={styles.photoContainer}>
-            {isPhoto && <Image source={userPhoto} />}
-            {isPhoto ? (
+    <UserStack.Navigator
+      initialRouteName="User"
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          height: 80,
+        },
+      }}
+    >
+      <UserStack.Screen
+        name="User"
+        component={UserScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <UserStack.Screen
+        name="Comments"
+        component={CommentsPostsScreen}
+        options={{
+          title: "Коментарі",
+          headerTitleStyle: {
+            fontFamily: "RobotoRegular",
+            fontSize: 17,
+            lineHeight: 22,
+            alignItems: "center",
+            textAlign: "center",
+            color: "#212121",
+          },
+          headerLeft: () => {
+            return (
               <TouchableOpacity
-                style={{ ...styles.addPhotoBtn, borderColor: "#BDBDBD" }}
-                activeOpacity={0.7}
-                onPress={() => setIsPhoto(false)}
+                style={{ marginLeft: 10 }}
+                onPress={() => {
+                  navigation.goBack();
+                }}
               >
-                <Image source={deletePhotoImg} style={styles.addPhotoImg} />
+                <Feather
+                  name="arrow-left"
+                  size={24}
+                  color="rgba(33, 33, 33, 0.8)"
+                />
               </TouchableOpacity>
-            ) : (
+            );
+          },
+        }}
+      />
+      <UserStack.Screen
+        name="Map"
+        component={MapPostsScreen}
+        options={{
+          title: "Мапа",
+          headerTitleStyle: {
+            fontFamily: "Roboto_500Medium",
+            fontSize: 17,
+            lineHeight: 22,
+            alignItems: "center",
+            textAlign: "center",
+            color: "#212121",
+          },
+          headerLeft: () => {
+            return (
               <TouchableOpacity
-                style={styles.addPhotoBtn}
-                activeOpacity={0.7}
-                onPress={() => setIsPhoto(true)}
+                style={{ marginLeft: 10 }}
+                onPress={() => {
+                  handleGoBack();
+                }}
               >
-                <Image source={addPhotoImg} style={styles.addPhotoImg} />
+                <Feather
+                  name="arrow-left"
+                  size={24}
+                  color="rgba(33, 33, 33, 0.8)"
+                />
               </TouchableOpacity>
-            )}
-          </View>
-          <Text style={{ ...styles.name, fontFamily: fonts[0] }}>
-            Natali Romanova
-          </Text>
-        </View>
-      </ImageBackground>
-    </View>
+            );
+          },
+        }}
+      />
+    </UserStack.Navigator>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  image: {
-    flex: 1,
-    justifyContent: "flex-end",
-    resizeMode: "cover",
-  },
-  profileContainer: {
-    backgroundColor: "#FFFFFF",
-    borderTopStartRadius: 25,
-    borderTopEndRadius: 25,
-    paddingHorizontal: 16,
-    paddingTop: 93,
-    position: "relative",
-  },
-  photoContainer: {
-    position: "absolute",
-    width: 120,
-    height: 120,
-    backgroundColor: "#F6F6F6",
-    borderRadius: 16,
-    left: "50%",
-    transform: [{ translateY: -50 }, { translateX: -50 }],
-  },
-  addPhotoBtn: {
-    position: "absolute",
-    right: 0,
-    bottom: 14,
-    width: 25,
-    height: 25,
-    transform: [{ translateX: 12.5 }],
-
-    alignItems: "center",
-    justifyContent: "center",
-
-    borderColor: "#FF6C00",
-    borderWidth: 1,
-    borderRadius: "50%",
-  },
-  addPhotoImg: {
-    resizeMode: "cover",
-    width: 15,
-    height: 15,
-  },
-  name: {
-    paddingTop: 92,
-    marginBottom: 33,
-    fontSize: 30,
-    lineHeight: 35,
-    textAlign: "center",
-    letterSpacing: "0.01em",
-    color: "#212121",
-  },
-  backBtn: {
-      position: 'absolute',
-      top: 22,
-      right: 16,
-  },
-});
+export default DefaultUserScreen;

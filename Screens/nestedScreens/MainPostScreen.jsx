@@ -2,6 +2,7 @@ import {
   FlatList,
   Image,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -16,15 +17,18 @@ const fonts = ["Roboto", "RobotoRegular", "RobotoBold"];
 export const Posts = ({ route, navigation }) => {
   const [myPosts, setMyPosts] = useState([]);
 
-
   useEffect(() => {
-    if (route.params) {
-      setMyPosts((prev) => [route.params, ...prev]);
-    }
-  }, [route.params]);
+    (async () => {
+      await onSnapshot(query(collection(db, "posts")), (querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          setMyPosts((posts) => [...posts, { id: doc.id, ...doc.data() }]);
+        });
+      });
+    })();
+  }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.userContainer}>
         <Image source={userPhoto} style={styles.image} />
         <View>
@@ -39,15 +43,15 @@ export const Posts = ({ route, navigation }) => {
       <SafeAreaView>
         <FlatList
           data={myPosts}
-          keyExtractor={(item, index) => {
+          keyExtractor={(item) => {
             index.toString();
           }}
-          renderItem={({ item, index }) => (
-            <Post post={item} key={index} navigation={navigation} />
+          renderItem={({ item }) => (
+            <Post post={item} key={item.id} navigation={navigation} />
           )}
         />
       </SafeAreaView>
-    </View>
+    </ScrollView>
   );
 };
 
