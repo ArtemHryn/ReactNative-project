@@ -1,12 +1,15 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { LoginScreen } from "./Screens/auth/LoginScreen";
-import { Registration } from "./Screens/auth/RegistrationScreen";
-import { Home } from "./Screens/MainScreens/Home";
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from "@react-navigation/native";
+import { useDispatch } from "react-redux";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
+import { useRoute } from "./src/helper/router";
+import { getStateChange } from "./src/redux/auth/selectors";
+import { logout } from "./src/redux/auth/operations";
 
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -19,12 +22,23 @@ const loadFonts = async () => {
 
 SplashScreen.preventAutoHideAsync();
 
-const Auth = createStackNavigator();
-
 export default function App() {
   const [fontsIsLoaded, setFontsIsLoaded] = useState(false);
+  const isAuth = useSelector(getStateChange);
+  const navigation = useNavigationContainerRef();
+  const dispatch = useDispatch();
+
+  const onLogout = () => {
+    dispatch(logout())
+  }
 
   useEffect(() => {
+    const authStateCheck = async () => {
+      await onAuthStateChanged(auth, async (user) => {
+        dispatch(checkaAuthState(user));
+      });
+    };
+    authStateCheck();
     (async () => {
       try {
         await loadFonts();
@@ -45,27 +59,11 @@ export default function App() {
     return null;
   }
 
+  const routing = useRoute(isAuth, onLogout);
+
   return (
     <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <NavigationContainer>
-        <Auth.Navigator initialRouteName="Login">
-          <Auth.Screen
-            options={{ headerShown: false }}
-            name="Login"
-            component={LoginScreen}
-          />
-          <Auth.Screen
-            options={{ headerShown: false }}
-            name="Registration"
-            component={Registration}
-          />
-          <Auth.Screen
-            options={{ headerShown: false }}
-            name="Home"
-            component={Home}
-          />
-        </Auth.Navigator>
-      </NavigationContainer>
+      <NavigationContainer ref={navigation}>{routing}</NavigationContainer>
     </View>
   );
 }

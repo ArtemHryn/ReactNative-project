@@ -16,6 +16,7 @@ const fonts = ["Roboto", "RobotoRegular", "RobotoBold"];
 export const Posts = ({ route, navigation }) => {
   const [myPosts, setMyPosts] = useState([]);
 
+
   useEffect(() => {
     if (route.params) {
       setMyPosts((prev) => [route.params, ...prev]);

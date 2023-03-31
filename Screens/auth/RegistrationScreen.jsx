@@ -1,4 +1,6 @@
-import {  useState } from "react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+
 import {
   StyleSheet,
   Text,
@@ -15,30 +17,27 @@ import addPhotoImg from "../../images/Union.png";
 import deletePhotoImg from "../../images/greyCross.png";
 import userPhoto from "../../images/userPhoto.png";
 import photoBG from "../../images/Photo_BG.jpg";
-
+import { register } from "../../src/redux/auth/operations";
 
 const fonts = ["Roboto", "RobotoRegular"];
 const initialState = { login: "", email: "", password: "" };
 
 export const Registration = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [focus, setFocus] = useState(false);
   const [isPhoto, setIsPhoto] = useState(false);
   const [credentiasl, setCredentials] = useState(initialState);
   const [showPass, setShowPass] = useState(true);
 
-
   const onRegister = () => {
-    console.log(credentiasl);
+    dispatch(register(credentiasl));
     setCredentials(initialState);
-    navigation.navigate("Home");
-
   };
 
   const onTouchOutOfForm = () => {
     Keyboard.dismiss();
     setFocus(false);
   };
-
 
   return (
     <TouchableWithoutFeedback onPress={onTouchOutOfForm}>
@@ -47,7 +46,7 @@ export const Registration = ({ navigation }) => {
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
-            <View style={styles.registerContainer} >
+            <View style={styles.registerContainer}>
               <View style={styles.photoContainer}>
                 {isPhoto && <Image source={userPhoto} />}
                 {isPhoto ? (

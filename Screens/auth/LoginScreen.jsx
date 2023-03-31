@@ -1,4 +1,5 @@
-import {  useState } from "react";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   StyleSheet,
   Text,
@@ -11,20 +12,20 @@ import {
   Keyboard,
 } from "react-native";
 import photoBG from "../../images/Photo_BG.jpg";
+import { login } from "../../src/redux/auth/operations";
 
 const fonts = ["Roboto", "RobotoRegular"];
 const initialState = { email: "", password: "" };
 
 export const LoginScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [focus, setFocus] = useState();
   const [credentiasl, setCredentials] = useState(initialState);
   const [showPass, setShowPass] = useState(true);
 
-
   const onLogin = () => {
-    console.log(credentiasl);
+    dispatch(login(credentiasl));
     setCredentials(initialState);
-    navigation.navigate("Home");
   };
   const onTouchOutOfForm = () => {
     Keyboard.dismiss();
@@ -39,9 +40,7 @@ export const LoginScreen = ({ navigation }) => {
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
             <View style={styles.loginContainer}>
-              <Text style={{ ...styles.header }}>
-                Войти
-              </Text>
+              <Text style={{ ...styles.header }}>Войти</Text>
               <View>
                 <TextInput
                   style={{ ...styles.input, fontFamily: fonts[1] }}
